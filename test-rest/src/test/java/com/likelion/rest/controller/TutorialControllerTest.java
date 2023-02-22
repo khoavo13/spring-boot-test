@@ -35,14 +35,6 @@ class TutorialControllerTest {
     @MockBean
     private TutorialServiceImpl tutorialService;
 
-    @BeforeEach
-    void setUp() {
-
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
 
     @Test
     void getAllTutorials() throws Exception {
@@ -69,6 +61,7 @@ class TutorialControllerTest {
     @Test
     void getTutorialById() throws Exception {
         // Tạo đối tượng Tutorial và mock dữ liệu trả về từ service
+        long id = 1l;
         Tutorial tutorial = new Tutorial();
         tutorial.setId(1L);
         tutorial.setTitle("title1");
@@ -78,12 +71,33 @@ class TutorialControllerTest {
         when(tutorialService.findById(1L)).thenReturn(tutorial);
 
         // Gửi yêu cầu GET /tutorials/1 và kiểm tra phản hồi
-        mockMvc.perform(get("/api/tutorials/1"))
+        mockMvc.perform(get("/api/tutorials/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(1l))
+                .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.title").value("title1"))
                 .andExpect(jsonPath("$.description").value("des1"));
+    }
+
+    @Test
+    void findByPublished() throws Exception {
+        // given
+        boolean published = true;
+        List<Tutorial> tutorials = new ArrayList<>();
+        tutorials.add(new Tutorial(1l,"title1","des1", true));
+        tutorials.add(new Tutorial(2l,"title2","des2", true));
+
+        // when
+        when(tutorialService.findByPublished(published)).thenReturn(tutorials);
+
+        mockMvc.perform(get("/api/tutorials/published")
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].title").value("title1"))
+                .andExpect(jsonPath("$[0].description").value("des1"))
+                .andExpect(jsonPath("$[1].title").value("title2"))
+                .andExpect(jsonPath("$[1].description").value("des2"));
     }
 
     @Test
@@ -137,24 +151,5 @@ class TutorialControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    @Test
-    void findByPublished() throws Exception {
-        // given
-        boolean published = true;
-        List<Tutorial> tutorials = new ArrayList<>();
-        tutorials.add(new Tutorial(1l,"title1","des1", true));
-        tutorials.add(new Tutorial(2l,"title2","des2", true));
 
-        // when
-        when(tutorialService.findByPublished(published)).thenReturn(tutorials);
-
-        mockMvc.perform(get("/api/tutorials/published")
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title").value("title1"))
-                .andExpect(jsonPath("$[0].description").value("des1"))
-                .andExpect(jsonPath("$[1].title").value("title2"))
-                .andExpect(jsonPath("$[1].description").value("des2"));
-    }
 }

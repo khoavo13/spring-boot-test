@@ -24,14 +24,6 @@ class TutorialServiceImplTest {
     @InjectMocks
     private TutorialServiceImpl tutorialService;
 
-    @BeforeEach
-    void setUp() {
-    }
-
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void findAll() {
         List<Tutorial> tutorials = new ArrayList<>();
