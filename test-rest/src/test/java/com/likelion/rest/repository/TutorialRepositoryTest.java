@@ -8,14 +8,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 
 @ExtendWith(MockitoExtension.class)
 class TutorialRepositoryTest {
@@ -27,8 +24,8 @@ class TutorialRepositoryTest {
         boolean published = true;
 
         List<Tutorial> tutorials = new ArrayList<>();
-        tutorials.add(new Tutorial(1L, "title1", "des1", true));
-        tutorials.add(new Tutorial(2L, "title2", "des2", true));
+        tutorials.add(new Tutorial(1L, "title1", "des1", published));
+        tutorials.add(new Tutorial(2L, "title2", "des2", published));
 
         when(tutorialRepository.findByPublished(published)).thenReturn(tutorials);
         List<Tutorial> result = tutorialRepository.findByPublished(published);
@@ -62,13 +59,9 @@ class TutorialRepositoryTest {
     @Test
     void deleteAll() {
         doNothing().when(tutorialRepository).deleteAll();
-
         // When
         tutorialRepository.deleteAll();
-
         // Then
         verify(tutorialRepository, times(1)).deleteAll();
     }
-
-
 }
