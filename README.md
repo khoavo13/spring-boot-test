@@ -82,10 +82,18 @@
 
 ## Part 2: Setting Actuator and DevTools
 
-### 2.1. Spring Boot Actuator
-![](./image/actuator-config.PNG)
 
+### 2.1. Spring Boot Actuator
+##### Dependence
+  ````
+  <dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-actuator</artifactId>
+  </dependency>
+
+  ````
 ##### The corresponding configuration in the file application.properties
+![](./image/actuator-config.PNG)
 * Set up port 8090 for monitoring management
 * Set enable for all endpoints
 * Shut down the application using Actuator
